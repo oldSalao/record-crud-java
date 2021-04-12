@@ -36,7 +36,7 @@ public class RecordCrudView extends JFrame {
 		JPanel jpFootBtn = new JPanel();
 		JPanel jpFoot = new JPanel(new GridLayout(2, 1));
 		JPanel[] jplArr = new JPanel[4];
-		JScrollPane jspList = new JScrollPane();
+		JScrollPane jspList = null;
 
 		for (int i = 0; i < jplArr.length; i++) {
 			jplArr[i] = new JPanel(new FlowLayout());
@@ -47,6 +47,7 @@ public class RecordCrudView extends JFrame {
 		JLabel jlbAge = new JLabel("나이 : ");
 		JLabel jlbAddress = new JLabel("주소 : ");
 		jtfNum = new JTextField();
+		jtfNum.setEditable(false);
 		jtfName = new JTextField();
 		jtfAge = new JTextField();
 		jtfAddress = new JTextField();
@@ -60,6 +61,7 @@ public class RecordCrudView extends JFrame {
 		jbtnDelete = new JButton("삭제");
 		jbtnUpdate = new JButton("변경");
 		jbtnClose = new JButton("닫기");
+		jspList = new JScrollPane(jlRecord);
 
 		jplArr[0].add(jlbNum);
 		jplArr[0].add(jtfNum);
@@ -74,7 +76,6 @@ public class RecordCrudView extends JFrame {
 			jpL.add(jplArr[i]);
 		}
 		jpMain.add(jpL);
-		jspList.add(jlRecord);
 		jpMain.add(jspList);
 		jpFootBtn.add(jbtnCreate);
 		jpFootBtn.add(jbtnDelete);
@@ -82,6 +83,13 @@ public class RecordCrudView extends JFrame {
 		jpFootBtn.add(jbtnClose);
 		jpFoot.add(Box.createVerticalStrut(20));
 		jpFoot.add(jpFootBtn);
+
+		RecordCrudEvt rce = new RecordCrudEvt(this);
+		jbtnCreate.addActionListener(rce);
+		jbtnDelete.addActionListener(rce);
+		jbtnUpdate.addActionListener(rce);
+		jbtnClose.addActionListener(rce);
+		jlRecord.addListSelectionListener(rce);
 
 		this.add(jpMain);
 		this.add(jpFoot, "South");
@@ -172,5 +180,5 @@ public class RecordCrudView extends JFrame {
 	public void setDlm(DefaultListModel<String> dlm) {
 		this.dlm = dlm;
 	}
-	
+
 }
