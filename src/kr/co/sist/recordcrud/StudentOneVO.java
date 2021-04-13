@@ -1,11 +1,11 @@
 package kr.co.sist.recordcrud;
 
-public class StudentAddVO {
+public class StudentOneVO {
 	private String name;
 	private int age;
 	private String address;
 
-	public StudentAddVO(String name, int age, String address) {
+	public StudentOneVO(String name, int age, String address) {
 		this.name = name;
 		this.age = age;
 		this.address = address;

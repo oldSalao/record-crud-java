@@ -53,7 +53,7 @@ public class RecordCrudDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		StringBuilder insertRecord = new StringBuilder();
-		StudentAddVO studAddVO = new StudentAddVO(name, age, address);
+		StudentOneVO studAddVO = new StudentOneVO(name, age, address);
 		DbConnection dc = DbConnection.getInstance();
 
 		try {
@@ -80,6 +80,27 @@ public class RecordCrudDAO {
 			insertRecord.append("delete from stud where num = ?");
 			pstmt = con.prepareStatement(insertRecord.toString());
 			pstmt.setInt(1, num);
+			pstmt.execute();
+		} finally {
+			dc.close(con, pstmt, null);
+		}
+	}
+
+	public void updateRecord(int num, String name, int age, String address) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		StringBuilder insertRecord = new StringBuilder();
+		StudentOneVO studOneVO = new StudentOneVO(name, age, address);
+		DbConnection dc = DbConnection.getInstance();
+
+		try {
+			con = dc.getConnection();
+			insertRecord.append("update stud set name = ?,age = ?, address = ? where num = ?");
+			pstmt = con.prepareStatement(insertRecord.toString());
+			pstmt.setString(1, studOneVO.getName());
+			pstmt.setInt(2, studOneVO.getAge());
+			pstmt.setString(3, studOneVO.getAddress());
+			pstmt.setInt(4, num);
 			pstmt.execute();
 		} finally {
 			dc.close(con, pstmt, null);
