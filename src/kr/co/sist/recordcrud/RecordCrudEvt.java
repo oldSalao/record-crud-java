@@ -2,23 +2,35 @@ package kr.co.sist.recordcrud;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class RecordCrudEvt implements ActionListener, ListSelectionListener {
+public class RecordCrudEvt extends WindowAdapter implements ActionListener, ListSelectionListener {
 
 	private RecordCrudView rcv;
 
 	public RecordCrudEvt(RecordCrudView rcv) {
 		this.rcv = rcv;
+	}
+
+	public void setJList() {
 		RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
+		List<StudentVO> list = new ArrayList<StudentVO>();
+		rcv.getDlm().clear();
 		try {
-			rcv.getDlm().addAll(rcDAO.getRecord());
-		} catch (SQLException e) {
-			e.printStackTrace();
+			list = rcDAO.selectAllStud();
+			for (int i = 0; i < list.size(); i++) {
+				rcv.getDlm().addElement(list.get(i).toString());
+			}
+		} catch (SQLException se) {
+			JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
 		}
 	}
 
@@ -34,11 +46,10 @@ public class RecordCrudEvt implements ActionListener, ListSelectionListener {
 				RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
 				try {
 					rcDAO.insertRecord(name, Integer.parseInt(age), address);
-					rcv.getDlm().clear();
-					rcv.getDlm().addAll(rcDAO.getRecord());
-				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(rcv, "동작중 문제가 발생했습니다.");
-				} catch (NumberFormatException e) {
+					setJList();
+				} catch (SQLException se) {
+					JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+				} catch (NumberFormatException ne) {
 					JOptionPane.showMessageDialog(rcv, "나이는 숫자만 입력해주세요.");
 				}
 			}
@@ -55,13 +66,30 @@ public class RecordCrudEvt implements ActionListener, ListSelectionListener {
 	}
 
 	@Override
+	public void windowClosing(WindowEvent e) {
+		rcv.dispose();
+	}
+
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getValueIsAdjusting()) {
-			String[] recordArr = rcv.getJlRecord().getSelectedValue().split(",");
-			rcv.getJtfNum().setText(recordArr[0]);
-			rcv.getJtfName().setText(recordArr[1]);
-			rcv.getJtfAge().setText(recordArr[2]);
-			rcv.getJtfAddress().setText(recordArr[3]);
+			RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
+			List<StudentVO> list = rcDAO.getStudList();
+			String record = rcv.getJlRecord().getSelectedValue();
+			String num = record.substring(record.indexOf(":") + 2, record.indexOf(","));
+			StudentVO studVO = null;
+
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getNum() == Integer.parseInt(num)) {
+					studVO = list.get(i);
+				}
+			}
+
+			rcv.getJtfNum().setText(studVO.getNum() + "");
+			rcv.getJtfName().setText(studVO.getName());
+			rcv.getJtfAge().setText(studVO.getAge() + "");
+			rcv.getJtfAddress().setText(studVO.getAddress());
 		}
 	}
+
 }

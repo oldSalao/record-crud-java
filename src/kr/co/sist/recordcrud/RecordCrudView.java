@@ -90,12 +90,15 @@ public class RecordCrudView extends JFrame {
 		jbtnUpdate.addActionListener(rce);
 		jbtnClose.addActionListener(rce);
 		jlRecord.addListSelectionListener(rce);
+		addWindowListener(rce);
 
 		this.add(jpMain);
 		this.add(jpFoot, "South");
 		this.add(Box.createVerticalStrut(30), "North");
 		this.add(Box.createHorizontalStrut(10), "East");
 		this.add(Box.createHorizontalStrut(10), "West");
+		
+		rce.setJList();
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
@@ -105,80 +108,40 @@ public class RecordCrudView extends JFrame {
 		return jbtnCreate;
 	}
 
-	public void setJbtnCreate(JButton jbtnCreate) {
-		this.jbtnCreate = jbtnCreate;
-	}
-
 	public JButton getJbtnDelete() {
 		return jbtnDelete;
-	}
-
-	public void setJbtnDelete(JButton jbtnDelete) {
-		this.jbtnDelete = jbtnDelete;
 	}
 
 	public JButton getJbtnUpdate() {
 		return jbtnUpdate;
 	}
 
-	public void setJbtnUpdate(JButton jbtnUpdate) {
-		this.jbtnUpdate = jbtnUpdate;
-	}
-
 	public JButton getJbtnClose() {
 		return jbtnClose;
-	}
-
-	public void setJbtnClose(JButton jbtnClose) {
-		this.jbtnClose = jbtnClose;
 	}
 
 	public JTextField getJtfNum() {
 		return jtfNum;
 	}
 
-	public void setJtfNum(JTextField jtfNum) {
-		this.jtfNum = jtfNum;
-	}
-
 	public JTextField getJtfName() {
 		return jtfName;
-	}
-
-	public void setJtfName(JTextField jtfName) {
-		this.jtfName = jtfName;
 	}
 
 	public JTextField getJtfAge() {
 		return jtfAge;
 	}
 
-	public void setJtfAge(JTextField jtfAge) {
-		this.jtfAge = jtfAge;
-	}
-
 	public JTextField getJtfAddress() {
 		return jtfAddress;
-	}
-
-	public void setJtfAddress(JTextField jtfAddress) {
-		this.jtfAddress = jtfAddress;
 	}
 
 	public JList<String> getJlRecord() {
 		return jlRecord;
 	}
 
-	public void setJlRecord(JList<String> jlRecord) {
-		this.jlRecord = jlRecord;
-	}
-
 	public DefaultListModel<String> getDlm() {
 		return dlm;
-	}
-
-	public void setDlm(DefaultListModel<String> dlm) {
-		this.dlm = dlm;
 	}
 
 }

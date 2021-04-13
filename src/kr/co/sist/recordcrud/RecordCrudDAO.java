@@ -9,19 +9,18 @@ import java.util.List;
 
 public class RecordCrudDAO {
 	private static RecordCrudDAO rcDAO;
-	private List<String> studRecord;
+	private List<StudentVO> studList;
 
 	private RecordCrudDAO() {
-		studRecord = new ArrayList<String>();
+		studList = new ArrayList<StudentVO>();
 	}
 
-	public List<String> getRecord() throws SQLException {
-		studRecord.clear();
+	public List<StudentVO> selectAllStud() throws SQLException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder selectRecord = new StringBuilder();
-		StringBuilder result = null;
+		StudentVO studVO = null;
 
 		DbConnection dc = DbConnection.getInstance();
 
@@ -30,34 +29,40 @@ public class RecordCrudDAO {
 			selectRecord.append("select * from stud");
 			pstmt = con.prepareStatement(selectRecord.toString());
 			rs = pstmt.executeQuery();
+
+			if (!studList.isEmpty()) {
+				studList.clear();
+			}
+
 			while (rs.next()) {
-				result = new StringBuilder();
-				result.append(rs.getInt("num"));
-				result.append(", ").append(rs.getString("name"));
-				result.append(", ").append(rs.getInt("age"));
-				result.append(", ").append(rs.getString("address"));
-				studRecord.add(result.toString());
+				studVO = new StudentVO(rs.getInt("num"), rs.getString("name"), rs.getInt("age"),
+						rs.getString("address"));
+				studList.add(studVO);
 			}
 		} finally {
 			dc.close(con, pstmt, rs);
 		}
-		return studRecord;
+		return studList;
+	}
+
+	public List<StudentVO> getStudList() {
+		return studList;
 	}
 
 	public void insertRecord(String name, int age, String address) throws SQLException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		StringBuilder insertRecord = new StringBuilder();
-
+		StudentAddVO studAddVO = new StudentAddVO(name, age, address);
 		DbConnection dc = DbConnection.getInstance();
 
 		try {
 			con = dc.getConnection();
 			insertRecord.append("insert into stud values (seq_stud.nextval,?,?,?)");
 			pstmt = con.prepareStatement(insertRecord.toString());
-			pstmt.setString(1, name);
-			pstmt.setInt(2, age);
-			pstmt.setString(3, address);
+			pstmt.setString(1, studAddVO.getName());
+			pstmt.setInt(2, studAddVO.getAge());
+			pstmt.setString(3, studAddVO.getAddress());
 			pstmt.execute();
 		} finally {
 			dc.close(con, pstmt, null);
