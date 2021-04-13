@@ -26,7 +26,7 @@ public class RecordCrudDAO {
 
 		try {
 			con = dc.getConnection();
-			selectRecord.append("select * from stud");
+			selectRecord.append("select * from stud order by num");
 			pstmt = con.prepareStatement(selectRecord.toString());
 			rs = pstmt.executeQuery();
 
@@ -63,6 +63,23 @@ public class RecordCrudDAO {
 			pstmt.setString(1, studAddVO.getName());
 			pstmt.setInt(2, studAddVO.getAge());
 			pstmt.setString(3, studAddVO.getAddress());
+			pstmt.execute();
+		} finally {
+			dc.close(con, pstmt, null);
+		}
+	}
+
+	public void deleteRecord(int num) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		StringBuilder insertRecord = new StringBuilder();
+		DbConnection dc = DbConnection.getInstance();
+
+		try {
+			con = dc.getConnection();
+			insertRecord.append("delete from stud where num = ?");
+			pstmt = con.prepareStatement(insertRecord.toString());
+			pstmt.setInt(1, num);
 			pstmt.execute();
 		} finally {
 			dc.close(con, pstmt, null);

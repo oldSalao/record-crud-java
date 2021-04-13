@@ -33,6 +33,13 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 			JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
 		}
 	}
+	
+	public void clearJtf() {
+		rcv.getJtfNum().setText("");
+		rcv.getJtfName().setText("");
+		rcv.getJtfAge().setText("");
+		rcv.getJtfAddress().setText("");
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -47,6 +54,7 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 				try {
 					rcDAO.insertRecord(name, Integer.parseInt(age), address);
 					setJList();
+					clearJtf();
 				} catch (SQLException se) {
 					JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
 				} catch (NumberFormatException ne) {
@@ -55,7 +63,17 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 			}
 		}
 		if (ae.getSource() == rcv.getJbtnDelete()) {
-
+			RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
+			try {
+				int num = Integer.parseInt(rcv.getJtfNum().getText());
+				rcDAO.deleteRecord(num);
+				setJList();
+				clearJtf();
+			} catch (NumberFormatException ne) {
+				JOptionPane.showMessageDialog(rcv, "행을 먼저 선택해주세요.");
+			} catch (SQLException se) {
+				JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+			}
 		}
 		if (ae.getSource() == rcv.getJbtnUpdate()) {
 		}
