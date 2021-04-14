@@ -34,11 +34,12 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 		}
 	}
 
-	public void clearJtf() {
+	public void clearAll() {
 		rcv.getJtfNum().setText("");
 		rcv.getJtfName().setText("");
 		rcv.getJtfAge().setText("");
 		rcv.getJtfAddress().setText("");
+		rcv.getJlRecord().clearSelection();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 				try {
 					rcDAO.insertRecord(name, Integer.parseInt(age), address);
 					setJList();
-					clearJtf();
+					clearAll();
 				} catch (SQLException se) {
 					JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
 				} catch (NumberFormatException ne) {
@@ -64,31 +65,42 @@ public class RecordCrudEvt extends WindowAdapter implements ActionListener, List
 		}
 		if (ae.getSource() == rcv.getJbtnDelete()) {
 			RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
-			try {
-				int num = Integer.parseInt(rcv.getJtfNum().getText());
-				rcDAO.deleteRecord(num);
-				setJList();
-				clearJtf();
-			} catch (NumberFormatException ne) {
-				JOptionPane.showMessageDialog(rcv, "행을 먼저 선택해주세요.");
-			} catch (SQLException se) {
-				JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+			String name = rcv.getJtfName().getText();
+			String age = rcv.getJtfAge().getText();
+			String address = rcv.getJtfAddress().getText();
+			if (name.equals("") || age.equals("") || address.equals("")) {
+				JOptionPane.showMessageDialog(rcv, "빈칸이 있습니다.");
+			} else {
+				try {
+					int num = Integer.parseInt(rcv.getJtfNum().getText());
+					rcDAO.deleteRecord(num);
+					setJList();
+					clearAll();
+				} catch (NumberFormatException ne) {
+					JOptionPane.showMessageDialog(rcv, "행을 먼저 선택해주세요.");
+				} catch (SQLException se) {
+					JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+				}
 			}
 		}
 		if (ae.getSource() == rcv.getJbtnUpdate()) {
 			RecordCrudDAO rcDAO = RecordCrudDAO.getInstance();
-			try {
-				int num = Integer.parseInt(rcv.getJtfNum().getText());
-				String name = rcv.getJtfName().getText();
-				int age = Integer.parseInt(rcv.getJtfAge().getText());
-				String address = rcv.getJtfAddress().getText();
-				rcDAO.updateRecord(num, name, age, address);
-				setJList();
-				clearJtf();
-			} catch (NumberFormatException ne) {
-				JOptionPane.showMessageDialog(rcv, "행을 먼저 선택해주세요.");
-			} catch (SQLException se) {
-				JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+			String name = rcv.getJtfName().getText();
+			String age = rcv.getJtfAge().getText();
+			String address = rcv.getJtfAddress().getText();
+			if (name.equals("") || age.equals("") || address.equals("")) {
+				JOptionPane.showMessageDialog(rcv, "빈칸이 있습니다.");
+			} else {
+				try {
+					int num = Integer.parseInt(rcv.getJtfNum().getText());
+					rcDAO.updateRecord(num, name, Integer.parseInt(age), address);
+					setJList();
+					clearAll();
+				} catch (NumberFormatException ne) {
+					JOptionPane.showMessageDialog(rcv, "행을 먼저 선택해주세요.");
+				} catch (SQLException se) {
+					JOptionPane.showMessageDialog(rcv, "실행중 문제가 발생했습니다.");
+				}
 			}
 		}
 		if (ae.getSource() == rcv.getJbtnClose()) {
